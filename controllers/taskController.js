@@ -1,7 +1,6 @@
 const catchAsync = require("../utils/catchAsync");
 const Task = require("../models/taskModel");
 const User = require("../models/userModel");
-const AppError = require("../utils/appError");
 
 // To "/" general route
 // Get Tasks
@@ -30,7 +29,7 @@ exports.createTask = catchAsync(async (req, res) => {
 		const task = await Task.create({
 			title,
 			description,
-			author: req.user.id,
+			poster: req.user.id,
 			dueDate,
 			points,
 		});
@@ -55,7 +54,11 @@ exports.getTask = catchAsync(async (req, res) => {
 		const task = await Task.findById(id);
 
 		if (!task) {
-			return next(new AppError(`Task: ${id} could not be found`, 404));
+			return res.status(404).json({
+				status: "error",
+				message: `Task: ${id} could not be found`,
+				data: {},
+			});
 		}
 		res.status(200).json({
 			status: "successs",
@@ -79,10 +82,12 @@ exports.updateTask = catchAsync(async (req, res) => {
 			res.send(`Task of id: ${id} could not be found`);
 		}
 
-		if (req.user.id !== book.author.id) {
-			return next(
-				new AppError("You are not allowed to edit this book:", 401)
-			);
+		if (req.user.id !== task.poster) {
+			return res.status(401).json({
+				status: "error",
+				message: "You are not allowed to update this task",
+				data: {},
+			});
 		}
 
 		const updatedTask = await Task.findByIdAndUpdate(id, req.body);
@@ -109,10 +114,12 @@ exports.deleteTask = catchAsync(async (req, res) => {
 			res.send(`Task of id: ${id} could not be found`);
 		}
 
-		if (req.user.id !== book.author.id) {
-			return next(
-				new AppError("You are not allowed to edit this book:", 401)
-			);
+		if (req.user.id !== task.poster) {
+			return res.status(401).json({
+				status: "error",
+				message: "You are not allowed to delete this task",
+				data: {},
+			});
 		}
 
 		const updatedTask = await Task.findByIdAndDelete(id, req.body);

@@ -17,7 +17,7 @@ const taskSchema = new Schema({
 		enum: ["beginner", "intermediate", "expert"],
 		default: "beginner",
 	},
-	owner: {
+	poster: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
 		required: true,

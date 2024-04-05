@@ -24,6 +24,14 @@ app.get("/", (req, res) => {
 	res.send("Welcome to your web application!");
 });
 
+app.get("/login", (req, res) => {
+	res.send("This is the login page");
+});
+
+app.get("/signup", (req, res) => {
+	res.send("This is the signup page");
+});
+
 // module.exports = app;
 
 dbConnect();
