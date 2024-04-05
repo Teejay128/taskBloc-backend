@@ -6,21 +6,21 @@ const { promisify } = require("util");
 require("dotenv").config();
 
 const signToken = (id) => {
-	return JWT.sign({ data: id }, "Secret", { expiresIn: "1h" });
+	return JWT.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 
 const createSendToken = (user, statusCode, res) => {
 	const token = signToken(user._id);
-	console.log(token);
 	const cookieOptions = {
 		expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-		httpOnly: true,
-		sameSite: "none",
-		secure: true,
+		// httpOnly: true,
+		// sameSite: "none",
+		// secure: true,
 	};
 
 	res.cookie("jwt", token, cookieOptions);
 	user.password = undefined;
+
 	res.status(statusCode).json({
 		status: "success",
 		token,
@@ -33,9 +33,7 @@ const createSendToken = (user, statusCode, res) => {
 exports.signup = catchAsync(async (req, res, next) => {
 	const newUser = await User.create(req.body);
 	if (!newUser) return next(new AppError("User not created", 401));
-	let token = signToken(newUser._id);
-	console.log(token);
-	// createSendToken(newUser, 201, res);
+	createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -53,16 +51,10 @@ exports.login = catchAsync(async (req, res, next) => {
 	createSendToken(user, 200, res);
 });
 
-exports.logout = (req, res) => {
-	res.cookie("jwt", "loggedout", {
-		expires: new Date(Date.now() + 10 * 1000),
-		httpOnly: true,
-	});
-	res.status(200).json({ status: "success" });
-};
-
 exports.protect = catchAsync(async (req, res, next) => {
 	let token;
+	console.log(req.cookies.jwt); // undefined
+
 	if (
 		req.headers.authorization &&
 		req.headers.authorization.startsWith("Bearer")
@@ -91,3 +83,11 @@ exports.protect = catchAsync(async (req, res, next) => {
 	req.user = user;
 	next();
 });
+
+exports.logout = (req, res) => {
+	res.cookie("jwt", "loggedout", {
+		expires: new Date(Date.now() + 10 * 1000),
+		httpOnly: true,
+	});
+	res.status(200).json({ status: "success" });
+};
