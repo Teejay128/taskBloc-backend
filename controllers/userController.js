@@ -61,13 +61,8 @@ exports.protect = catchAsync(async (req, res, next) => {
 	}
 
 	if (!token) {
-		// Consider redirecting to login page
-		return next(
-			new AppError(
-				"You are not logged in! Please log in to get access",
-				401
-			)
-		);
+		console.log("User is not signed in, redirecting to login page");
+		return res.redirect("/login");
 	}
 
 	const decoded = await promisify(JWT.verify)(token, process.env.JWT_SECRET);
