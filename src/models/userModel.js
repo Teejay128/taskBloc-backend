@@ -28,12 +28,12 @@ const userSchema = new Schema({
 			message: "Please enter a valid Nigerian phone number",
 		},
 	},
-	// tasks: [
-	// 	{
-	// 		type: mongoose.Schema.Types.ObjectId,
-	// 		ref: "Task",
-	// 	},
-	// ],
+	tasks: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Task",
+		},
+	],
 	role: {
 		type: String,
 		enum: ["employer", "worker"],

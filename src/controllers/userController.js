@@ -13,9 +13,6 @@ const createSendToken = (user, statusCode, res) => {
 	const token = signToken(user._id);
 	const cookieOptions = {
 		expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-		// httpOnly: true,
-		// sameSite: "none",
-		// secure: true,
 	};
 
 	res.cookie("jwt", token, cookieOptions);
@@ -53,7 +50,6 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
 	let token;
-	console.log(req.cookies.jwt); // undefined
 
 	if (
 		req.headers.authorization &&
@@ -65,6 +61,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 	}
 
 	if (!token) {
+		// Consider redirecting to login page
 		return next(
 			new AppError(
 				"You are not logged in! Please log in to get access",

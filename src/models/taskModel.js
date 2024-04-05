@@ -17,11 +17,11 @@ const taskSchema = new Schema({
 		enum: ["beginner", "intermediate", "expert"],
 		default: "beginner",
 	},
-	// owner: {
-	// 	type: mongoose.Schema.Types.ObjectId,
-	// 	ref: "User",
-	// 	required: true,
-	// },
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+		required: true,
+	},
 	status: {
 		type: String,
 		enum: ["pending", "completed", "expired"],
