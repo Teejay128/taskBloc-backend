@@ -1,6 +1,6 @@
 const express = require("express");
 const taskRouter = require("./routes/taskRouter");
-const authRouter = require("./routes/authRouter");
+const userRouter = require("./routes/userRouter");
 
 const app = express();
 
@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/api/tasks", taskRouter);
-app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
 app.use((err, req, res, next) => {
 	console.log(err.stack);
