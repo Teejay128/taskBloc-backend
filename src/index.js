@@ -2,6 +2,9 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const taskRouter = require("./routes/taskRouter");
 const userRouter = require("./routes/userRouter");
+const dbConnect = require("./utils/database");
+const port = process.env.PORT || 3000;
+require("dotenv").config();
 
 const app = express();
 
@@ -21,4 +24,10 @@ app.get("/", (req, res) => {
 	res.send("Welcome to your web application!");
 });
 
-module.exports = app;
+// module.exports = app;
+
+dbConnect();
+
+app.listen(port, (req, res) => {
+	console.log("Server running on port:", port);
+});
