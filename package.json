@@ -4,8 +4,8 @@
 	"description": "The backend for Team Icon's Buidlcon 2.0 TaskBloc project",
 	"main": "index.js",
 	"scripts": {
-		"start": "node ./src/index.js",
-		"dev": "nodemon ./src/index.js"
+		"start": "node index.js",
+		"dev": "nodemon index.js"
 	},
 	"keywords": [],
 	"author": "",
